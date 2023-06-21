@@ -27,13 +27,29 @@ Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gl
     </head>
 
     <body>
-        <!--   
-        <form class="container my-3">
-            <label for="password" >Password:</label>
-            <input type="password" name="password">
-            <input type="submit" value="LOGIN">
+        <form class="container my-2 mx-0">
+            <label for="parcheggio">Parcheggio:</label>
+
+            <input type="radio" id="parcheggio_SI" name="parking" value="si">
+            <label for="parcheggio_SI">Si</label>
+
+            <input type="radio" id="parcheggio_NO" name="parking" value="no">
+            <label for="parcheggio_NO">No</label>
+
+            <br>
+
+            <label for="voto">Voto</label>
+            <select name="vote" id="vote">
+                <option value="-1"></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>    
+            </select>
+
+            <input type="submit" value="Cerca">
         </form> 
-        -->
 
         <?php
             $hotels = [
@@ -74,9 +90,19 @@ Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gl
                 ],
             ];
 
-            echo "<pre>";
+            /* echo "<pre>";
             var_dump($hotels);
-            echo "</pre>";
+            echo "</pre>"; */
+
+            $parking = $_GET['parking'];
+            echo "parking";
+            var_dump($parking);
+    
+            echo "<br />";
+    
+            $vote = $_GET['vote'] ?? -1;
+            echo "vote";
+            var_dump($vote);
         ?>
 
         <table class="table">
@@ -90,22 +116,25 @@ Se non viene specificato nessun filtro, visualizzare come in precedenza tutti gl
                 </tr>
             </thead>
             <tbody>
-                <?php
+            <?php
                 foreach ($hotels as $hotel) {
-                    echo
-                    '<tr>' .
-                        '<th scope="row">' . $hotel['name'] . '</th>' .
-                        '<td>' . $hotel['description'] . '</td>' .
-                        '<td>' . ($hotel['parking']? 'Si':'No') . '</td>' .
-                        '<td>' . $hotel['vote'] . '</td>' .
-                        '<td>' . $hotel['distance_to_center'] . ' km' . '</td>' .
-                    '</tr>';
+
+                    if (($parking === null  
+                        || ($parking === "si" && $hotel['parking'])
+                        || ($parking === "no" && !$hotel['parking']))
+                        && $vote <= $hotel['vote']) {
+
+                        echo '<tr>';
+                        echo '<td>' . $hotel['name'] . '</td>';
+                        echo '<td>' . $hotel['description'] . '</td>';
+                        echo '<td>' . ($hotel['parking'] ? "Si" : "No") . '</td>';
+                        echo '<td>' . $hotel['vote'] . '</td>';
+                        echo '<td>' . $hotel['distance_to_center'] . ' Km' . '</td>';
+                        echo '</tr>';
+                    }
                 }
-                ?>
+            ?>
             </tbody>
         </table>
     </body>
 </html>
-
-
-    
